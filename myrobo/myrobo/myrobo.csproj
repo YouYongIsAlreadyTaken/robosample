@@ -42,6 +42,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BattleEvents.cs" />
     <Compile Include="CalculatedParams.cs" />
     <Compile Include="Confidence.cs" />
     <Compile Include="Handlers\Ram.cs" />

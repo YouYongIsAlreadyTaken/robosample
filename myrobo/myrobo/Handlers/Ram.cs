@@ -12,7 +12,7 @@ namespace myrobo.Handlers
     {
         private Random rnd = new Random(DateTime.Now.Millisecond);
 
-        public Confidence Evaluate(AdvancedRobot robot, ScannedRobotEvent e)
+        public Confidence Evaluate(AdvancedRobot robot, ScannedRobotEvent e, BattleEvents battleEvents)
         {
             Confidence confidence = Confidence.DonotBlameMeIfILoose;
             if (e.Distance < 200)
@@ -41,7 +41,7 @@ namespace myrobo.Handlers
 
             return confidence;
         }
-        public Operations HandleScanedRobot(AdvancedRobot robot, ScannedRobotEvent e, ScannedRobotEvent previousScaned, Operations operations)
+        public Operations HandleScanedRobot(AdvancedRobot robot, ScannedRobotEvent e, ScannedRobotEvent previousScaned, Operations operations, BattleEvents battleEvents)
         {
             var calculatedParams = new CalculatedParams(robot, e);
             var newOperations = operations.Clone();

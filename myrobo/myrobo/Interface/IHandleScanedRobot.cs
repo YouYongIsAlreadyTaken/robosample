@@ -9,7 +9,7 @@ namespace myrobo
 {
     interface IHandleScanedRobot
     {
-        Operations HandleScanedRobot(AdvancedRobot robot, ScannedRobotEvent e, ScannedRobotEvent previousScaned, Operations operations);
-        Confidence Evaluate(AdvancedRobot robot, ScannedRobotEvent e);
+        Operations HandleScanedRobot(AdvancedRobot robot, ScannedRobotEvent e, ScannedRobotEvent previousScaned, Operations operations, BattleEvents battleEvents);
+        Confidence Evaluate(AdvancedRobot robot, ScannedRobotEvent e, BattleEvents battleEvents);
     }
 }

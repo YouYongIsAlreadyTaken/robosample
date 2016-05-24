@@ -16,7 +16,7 @@ namespace myrobo
         private ScannedRobotEvent lastScannedRobotEvent;
         private Operations operations = new Operations() { Direction = 1, BulletPower = 3};
         private Random rnd = new Random(DateTime.Now.Millisecond);
-        
+        private BattleEvents battleEvents = new BattleEvents();
 
         private IList<IHandleScanedRobot> handlers = new List<IHandleScanedRobot>(){new Handlers.Ram()};
         public override void Run()
@@ -32,11 +32,11 @@ namespace myrobo
         public override void OnScannedRobot(ScannedRobotEvent e)
         {
             var results =
-                handlers.Select(handler => new {Evaludation = (int) handler.Evaluate(this, e), Handler = handler})
+                handlers.Select(handler => new { Evaludation = (int)handler.Evaluate(this, e, battleEvents), Handler = handler })
                     .OrderBy(item => item.Evaludation);
             var topones = results.Where(result => result.Evaludation == results.First().Evaludation);
             var choosen = topones.ElementAt(Convert.ToInt32(rnd.NextDouble() * topones.Count())).Handler;
-            ApplyOperations(choosen.HandleScanedRobot(this, e, lastScannedRobotEvent, operations));
+            ApplyOperations(choosen.HandleScanedRobot(this, e, lastScannedRobotEvent, operations, battleEvents));
             lastScannedRobotEvent = e;
         }
 
@@ -73,23 +73,26 @@ namespace myrobo
         
       
         public override void OnBulletHit(BulletHitEvent evnt)
-        {       
+        {      
+            battleEvents.BulletHitEvents.Add(evnt);
             base.OnBulletHit(evnt);
         }
 
         public override void OnBulletMissed(BulletMissedEvent evnt)
         {
+            battleEvents.BulletMissedEvents.Add(evnt);
             base.OnBulletMissed(evnt);
         }
 
         public override void OnHitByBullet(HitByBulletEvent evnt)
         {
-            
+            battleEvents.HitByBulletEvents.Add(evnt);
             base.OnHitByBullet(evnt);
         }
 
         public override void OnHitRobot(HitRobotEvent evnt)
         {
+            battleEvents.HitRobotEvents.Add(evnt);
             base.OnHitRobot(evnt);
         }
 
