@@ -43,6 +43,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CalculatedParams.cs" />
+    <Compile Include="Confidence.cs" />
     <Compile Include="Handlers\Ram.cs" />
     <Compile Include="Robot.cs" />
     <Compile Include="Interface\IHandleScanedRobot.cs" />

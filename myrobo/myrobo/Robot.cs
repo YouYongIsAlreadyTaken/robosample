@@ -15,9 +15,10 @@ namespace myrobo
     {
         private ScannedRobotEvent lastScannedRobotEvent;
         private Operations operations = new Operations() { Direction = 1, BulletPower = 3};
+        private Random rnd = new Random(DateTime.Now.Millisecond);
         
 
-        private IHandleScanedRobot handler = new Handlers.Ram();
+        private IList<IHandleScanedRobot> handlers = new List<IHandleScanedRobot>(){new Handlers.Ram()};
         public override void Run()
         {
             // -- Initialization of the robot --
@@ -30,7 +31,12 @@ namespace myrobo
         // Robot event handler, when the robot sees another robot
         public override void OnScannedRobot(ScannedRobotEvent e)
         {
-            ApplyOperations(handler.HandleScanedRobot(this, e, lastScannedRobotEvent, operations));
+            var results =
+                handlers.Select(handler => new {Evaludation = (int) handler.Evaluate(this, e), Handler = handler})
+                    .OrderBy(item => item.Evaludation);
+            var topones = results.Where(result => result.Evaludation == results.First().Evaludation);
+            var choosen = topones.ElementAt(Convert.ToInt32(rnd.NextDouble() * topones.Count())).Handler;
+            ApplyOperations(choosen.HandleScanedRobot(this, e, lastScannedRobotEvent, operations));
             lastScannedRobotEvent = e;
         }
 

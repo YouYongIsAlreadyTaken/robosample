@@ -11,6 +11,36 @@ namespace myrobo.Handlers
     class Ram : IHandleScanedRobot
     {
         private Random rnd = new Random(DateTime.Now.Millisecond);
+
+        public Confidence Evaluate(AdvancedRobot robot, ScannedRobotEvent e)
+        {
+            Confidence confidence = Confidence.DonotBlameMeIfILoose;
+            if (e.Distance < 200)
+            {
+                if (robot.Energy > e.Energy)
+                {
+                    confidence = Confidence.DesignedForThis;
+                }
+                else
+                {
+                    confidence = Confidence.CanHandleIt;
+                }
+
+            }
+            else
+            {
+                if (robot.Energy > e.Energy)
+                {
+                    confidence = Confidence.TryMe;
+                }
+                else
+                {
+                    confidence = Confidence.DonotBlameMeIfILoose;
+                }
+            }
+
+            return confidence;
+        }
         public Operations HandleScanedRobot(AdvancedRobot robot, ScannedRobotEvent e, ScannedRobotEvent previousScaned, Operations operations)
         {
             var calculatedParams = new CalculatedParams(robot, e);
