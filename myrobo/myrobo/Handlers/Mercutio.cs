@@ -1,10 +1,6 @@
-using System;
-using System.Collections;
+﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Robocode;
 using Robocode.Util;
 
@@ -12,7 +8,7 @@ namespace myrobo.Handlers
 {
     class Mercutio : IHandleScanedRobot
     {
-        static double FIRE_POWER=2;
+        static double FIRE_POWER=3;
 	    static double FIRE_SPEED=20-FIRE_POWER*3;
 	    static double BULLET_DAMAGE=10;
 	    /*
@@ -21,7 +17,6 @@ namespace myrobo.Handlers
 	    static bool PAINT_MOVEMENT=true;
 	    static bool PAINT_GUN=false;
 	    static double enemyEnergy;
-        private Random rnd = new Random(DateTime.Now.Millisecond);
         List<MovementWave> moveWaves = new List<MovementWave>();
         List<GunWave> gunWaves = new List<GunWave>();
         static double [] gunAngles = new double[16];
@@ -59,6 +54,7 @@ namespace myrobo.Handlers
         public Operations HandleScanedRobot(AdvancedRobot robot, ScannedRobotEvent e, ScannedRobotEvent previousScaned, Operations operations, BattleEvents battleEvents)
         {
             var newOperations = operations.Clone();
+            
             double absBearing = e.BearingRadians + robot.HeadingRadians;
             double energyChange = 0;
 

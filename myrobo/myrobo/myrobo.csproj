@@ -8,9 +8,10 @@
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>myrobo</RootNamespace>
-    <AssemblyName>yy.myrobo_0.1</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <AssemblyName>TaiJi.WebGo_Alpha</AssemblyName>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -31,10 +32,11 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="robocode">
-      <HintPath>C:\robocode\libs\robocode.dll</HintPath>
+      <HintPath>..\..\..\libs\robocode.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -45,6 +47,7 @@
     <Compile Include="BattleEvents.cs" />
     <Compile Include="CalculatedParams.cs" />
     <Compile Include="Confidence.cs" />
+    <Compile Include="Handlers\Mercutio.cs" />
     <Compile Include="Handlers\Ram.cs" />
     <Compile Include="Robot.cs" />
     <Compile Include="Interface\IHandleScanedRobot.cs" />

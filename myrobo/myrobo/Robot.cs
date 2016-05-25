@@ -9,16 +9,19 @@ using Robocode.Util;
 
 namespace myrobo
 {
-
-
-    public class MyRobot : AdvancedRobot
+    public class WebGo_Alpha : AdvancedRobot
     {
         private ScannedRobotEvent lastScannedRobotEvent;
         private Operations operations = new Operations() { Direction = 1, BulletPower = 3};
         private Random rnd = new Random(DateTime.Now.Millisecond);
         private BattleEvents battleEvents = new BattleEvents();
+        private const int minticks = 5;
+        private const int ticksRange = 10;
+        private int tickcount = 0;
+        private IHandleScanedRobot currentHandler;
 
-        private IList<IHandleScanedRobot> handlers = new List<IHandleScanedRobot>(){new Handlers.Ram()};
+        private IList<IHandleScanedRobot> handlers = new List<IHandleScanedRobot>() { new Handlers.Ram(), new Handlers.Mercutio() };
+        //private IList<IHandleScanedRobot> handlers = new List<IHandleScanedRobot>() { new Handlers.Mercutio() };
         public override void Run()
         {
             // -- Initialization of the robot --
@@ -31,12 +34,23 @@ namespace myrobo
         // Robot event handler, when the robot sees another robot
         public override void OnScannedRobot(ScannedRobotEvent e)
         {
-            var results =
-                handlers.Select(handler => new { Evaludation = (int)handler.Evaluate(this, e, battleEvents), Handler = handler })
-                    .OrderBy(item => item.Evaludation);
-            var topones = results.Where(result => result.Evaludation == results.First().Evaludation);
-            var choosen = topones.ElementAt(Convert.ToInt32(rnd.NextDouble() * topones.Count())).Handler;
-            ApplyOperations(choosen.HandleScanedRobot(this, e, lastScannedRobotEvent, operations, battleEvents));
+            if (tickcount == 0)
+            {
+                tickcount = minticks + (int) rnd.NextDouble()*ticksRange;
+                var results =
+                    handlers.Select(
+                        handler => new {Evaludation = (int) handler.Evaluate(this, e, battleEvents), Handler = handler})
+                        .OrderBy(item => item.Evaludation);
+                var topones = results.Where(result => result.Evaludation == results.First().Evaludation);
+                var choosen = topones.ElementAt((int) Math.Floor(rnd.NextDouble()*topones.Count())).Handler;
+                currentHandler = choosen;
+            }
+            else
+            {
+                tickcount--;
+            }
+
+            ApplyOperations(currentHandler.HandleScanedRobot(this, e, lastScannedRobotEvent, operations, battleEvents));
             lastScannedRobotEvent = e;
         }
 
