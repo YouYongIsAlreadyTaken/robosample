@@ -24,7 +24,7 @@ namespace myrobo.Handlers
         private Random rnd = new Random(DateTime.Now.Millisecond);
         List<MovementWave> moveWaves = new List<MovementWave>();
         List<GunWave> gunWaves = new List<GunWave>();
-        static List<Double> gunAngles=new List<Double>();
+        static double [] gunAngles = new double[16];
         //Must need to set gunAngles length to 16?
 
         public Confidence Evaluate(AdvancedRobot robot, ScannedRobotEvent e, BattleEvents battleEvents)
@@ -58,8 +58,7 @@ namespace myrobo.Handlers
         }
         public Operations HandleScanedRobot(AdvancedRobot robot, ScannedRobotEvent e, ScannedRobotEvent previousScaned, Operations operations, BattleEvents battleEvents)
         {
-
-
+            var newOperations = operations.Clone();
             double absBearing = e.BearingRadians + robot.HeadingRadians;
             double energyChange = 0;
 
@@ -82,7 +81,7 @@ namespace myrobo.Handlers
              * After we are done checking to see if we need to log any waves, we'll decide where to move.
              * To see this process take a peek at the chooseDirection method.
              */
-            chooseDirection(project(new PointF((Single)robot.X, (Single)robot.Y), e.Distance, absBearing),robot);
+            newOperations = chooseDirection(project(new PointF((Single)robot.X, (Single)robot.Y), e.Distance, absBearing),robot,newOperations);
 
             /*
              * logs a gun wave when we fire;
@@ -99,43 +98,13 @@ namespace myrobo.Handlers
             /*
              * Aiming our gun and firing
              */
-            robot.SetTurnGunRightRadians(Utils.NormalRelativeAngle(absBearing - robot.GunHeadingRadians)
-                    + gunAngles[8 + (int)(e.Velocity * Math.Sin(e.HeadingRadians - absBearing))]);
-            robot.SetFire(FIRE_POWER);
+            newOperations.TurnGunRightRadians = Utils.NormalRelativeAngle(absBearing - robot.GunHeadingRadians)
+                    + gunAngles[8 + (int)(e.Velocity * Math.Sin(e.HeadingRadians - absBearing))];
+            newOperations.BulletPower = FIRE_POWER;
 
-            robot.SetTurnRadarRightRadians(Utils.NormalRelativeAngle(absBearing - robot.RadarHeadingRadians) * 2);
-            
-            
-            
-            
-            
-            var calculatedParams = new CalculatedParams(robot, e);
-            var newOperations = operations.Clone();
-            if (previousScaned != null && previousScaned.Energy > e.Energy)
-            {
-                OnEnemyFired(e, newOperations);
-            }
-
-            double turn = calculatedParams.AbsoluteBearing + Math.PI / 2;
-            turn -= Math.Max(0.5, (1 / e.Distance) * 100) * newOperations.Direction;
-            newOperations.TurnRightRadians = Utils.NormalRelativeAngle(turn - robot.HeadingRadians);
-
-            //This line makes us slow down when we need to turn sharply.
-            newOperations.MaxVelocity = 400 / robot.TurnRemaining;
-
-            newOperations.Ahead = 100 * newOperations.Direction;
-            if (newOperations.BulletPower.HasValue)
-            {
-                newOperations.TurnGunRightRadians =
-                    Utils.NormalRelativeAngle(
-                        GetCircularTargeting(robot, e, previousScaned != null ? previousScaned.HeadingRadians : 0,
-                            newOperations.BulletPower.Value, calculatedParams) - robot.GunHeadingRadians);
-            }
-            newOperations.TurnRadarRightRadians = Utils.NormalRelativeAngle(calculatedParams.AbsoluteBearing - robot.RadarHeadingRadians) * 2;
-
-
-
+            newOperations.TurnRadarRightRadians = Utils.NormalRelativeAngle(absBearing - robot.RadarHeadingRadians) * 2;
             return newOperations;
+
         }
 
         public void checkFiringWaves(PointF ePos)
@@ -166,7 +135,7 @@ namespace myrobo.Handlers
             gunWaves.Add(w);
         }
 
-        public void chooseDirection(PointF enemyLocation, AdvancedRobot robot)
+        public Operations chooseDirection(PointF enemyLocation, AdvancedRobot robot,Operations operations)
         {
             MovementWave w = new MovementWave();
             //This for loop rates each angle individually
@@ -217,10 +186,11 @@ namespace myrobo.Handlers
                      * choose the best direction for moving to a point.
                      */
                     int pointDir;
-                    robot.Ahead(1000 * (pointDir = (Math.Abs(moveAngle - robot.HeadingRadians) < Math.PI / 2 ? 1 : -1)));
-                    robot.TurnRightRadians(Utils.NormalRelativeAngle(moveAngle + (pointDir == -1 ? Math.PI : 0) - robot.HeadingRadians));
+                    operations.Ahead = 1000 * (pointDir = (Math.Abs(moveAngle - robot.HeadingRadians) < Math.PI / 2 ? 1 : -1));
+                    operations.TurnRightRadians = Utils.NormalRelativeAngle(moveAngle + (pointDir == -1 ? Math.PI : 0) - robot.HeadingRadians);
                 }
             }
+            return operations;
         }
 
         public static double GetDistanceBetweenPoints(PointF p, PointF q)
@@ -255,51 +225,6 @@ namespace myrobo.Handlers
             //This actually adds the wave to the list.
             moveWaves.Add(w);
         }
-        private void OnEnemyFired(ScannedRobotEvent e, Operations op)
-        {
-            if (rnd.NextDouble() > 200 / e.Distance)
-            {
-                op.Direction = -op.Direction;
-            }
-        }
-
-        private double GetCircularTargeting(AdvancedRobot robot, ScannedRobotEvent e, double lastHeadingRadians, double power, CalculatedParams calculated)
-        {
-            //Finding the heading and heading change.
-            double enemyHeading = e.HeadingRadians;
-            double enemyHeadingChange = enemyHeading - lastHeadingRadians;
-
-
-            /*This method of targeting is know as circular targeting; you assume your enemy will
-             *keep moving with the same speed and turn rate that he is using at fire time.The 
-             *base code comes from the wiki.
-            */
-            double deltaTime = 0;
-            double predictedX = robot.X + e.Distance * Math.Sin(calculated.AbsoluteBearing);
-            double predictedY = robot.Y + e.Distance * Math.Cos(calculated.AbsoluteBearing);
-            double speed = Utility.GetBulletSpeed(power);
-            while ((++deltaTime) * speed < Math.Sqrt(Math.Pow(robot.X - predictedX, 2) + Math.Pow(robot.Y - predictedY, 2)))
-            {
-
-                //Add the movement we think our enemy will make to our enemy's current X and Y
-                predictedX += Math.Sin(enemyHeading) * e.Velocity;
-                predictedY += Math.Cos(enemyHeading) * e.Velocity;
-
-
-                //Find our enemy's heading changes.
-                enemyHeading += enemyHeadingChange;
-
-                //If our predicted coordinates are outside the walls, put them 18 distance units away from the walls as we know 
-                //that that is the closest they can get to the wall (Bots are non-rotating 36*36 squares).
-                predictedX = Math.Max(Math.Min(predictedX, robot.BattleFieldWidth - 18), 18);
-                predictedY = Math.Max(Math.Min(predictedY, robot.BattleFieldHeight - 18), 18);
-
-            }
-            //Find the bearing of our predicted coordinates from us.
-            return Utils.NormalAbsoluteAngle(Math.Atan2(predictedX - robot.X, predictedY - robot.Y));
-        }
-
-
     }
 
     public class MovementWave
