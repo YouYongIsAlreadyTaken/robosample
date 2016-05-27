@@ -20,7 +20,7 @@ namespace myrobo
         private int tickcount = 0;
         private IHandleScanedRobot currentHandler;
 
-        private IList<IHandleScanedRobot> handlers = new List<IHandleScanedRobot>() { new Handlers.Ram(), new Handlers.Mercutio() };
+        private IList<IHandleScanedRobot> handlers = new List<IHandleScanedRobot>() { new Handlers.Ram(), new Handlers.SuperMercutioCSharp()};
         //private IList<IHandleScanedRobot> handlers = new List<IHandleScanedRobot>() { new Handlers.Mercutio() };
         public override void Run()
         {
@@ -87,7 +87,8 @@ namespace myrobo
         
       
         public override void OnBulletHit(BulletHitEvent evnt)
-        {      
+        {
+            currentHandler.OnBulletHit(evnt);
             battleEvents.BulletHitEvents.Add(evnt);
             base.OnBulletHit(evnt);
         }

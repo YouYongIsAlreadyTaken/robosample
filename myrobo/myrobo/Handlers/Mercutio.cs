@@ -1,8 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Drawing.Drawing2D;
-using System.Windows.Forms;
 using Robocode;
 using Robocode.Util;
 
@@ -51,6 +49,11 @@ namespace myrobo.Handlers
             }
 
             return confidence;
+        }
+
+        public void OnBulletHit(BulletHitEvent evnt)
+        {
+            
         }
 
         public Operations HandleScanedRobot(AdvancedRobot robot, ScannedRobotEvent e, ScannedRobotEvent previousScaned, Operations operations, BattleEvents battleEvents)

@@ -41,6 +41,12 @@ namespace myrobo.Handlers
 
             return confidence;
         }
+
+        public void OnBulletHit(BulletHitEvent evnt)
+        {
+            
+        }
+
         public Operations HandleScanedRobot(AdvancedRobot robot, ScannedRobotEvent e, ScannedRobotEvent previousScaned, Operations operations, BattleEvents battleEvents)
         {
             var calculatedParams = new CalculatedParams(robot, e);

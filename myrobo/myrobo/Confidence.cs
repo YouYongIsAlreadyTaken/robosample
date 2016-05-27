@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace myrobo
 {
-    enum Confidence
+    public enum Confidence
     {
         DesignedForThis = 0,
         CanHandleIt = 1,

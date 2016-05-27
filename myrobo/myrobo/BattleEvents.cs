@@ -7,7 +7,7 @@ using Robocode;
 
 namespace myrobo
 {
-    class BattleEvents
+    public class BattleEvents
     {
         public List<BulletHitEvent> BulletHitEvents = new List<BulletHitEvent>();
         public List<BulletMissedEvent> BulletMissedEvents = new List<BulletMissedEvent>();
