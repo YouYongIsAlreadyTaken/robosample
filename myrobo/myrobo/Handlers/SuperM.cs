@@ -1,13 +1,12 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
-using myrobo;
 using Robocode;
 using Robocode.Util;
 
 namespace myrobo.Handlers
 {
-    public class SuperMercutioCSharp : IHandleScanedRobot
+    public class SuperM : IHandleScanedRobot
     {
         static double FIRE_POWER = 2;
         static double FIRE_SPEED = 20 - FIRE_POWER*3;
@@ -15,10 +14,8 @@ namespace myrobo.Handlers
         /*
 	 * change these statistics to see different graphics.
 	 */
-        static bool PAINT_MOVEMENT = true;
-        static bool PAINT_GUN = false;
 
-        static double enemyEnergy;
+        static double enemyEnergy = 100;
 
         /*
 	 * An ArrayList can hold a list of objects. 
@@ -36,7 +33,7 @@ namespace myrobo.Handlers
         public Confidence Evaluate(AdvancedRobot robot, ScannedRobotEvent e, BattleEvents battleEvents)
         {
             Confidence confidence = Confidence.DonotBlameMeIfILoose;
-            if (e.Distance > 200)
+            if (e.Distance >= 200)
             {
                 if (robot.Energy < e.Energy)
                 {
@@ -72,6 +69,8 @@ namespace myrobo.Handlers
             Operations operations, BattleEvents battleEvents)
         {
             var newOperations = operations.Clone();
+
+            SetFirePowerBasedOnEnergy(robot, e);
 
             double absBearing = e.BearingRadians + robot.HeadingRadians;
 
@@ -109,11 +108,30 @@ namespace myrobo.Handlers
 		 */
             newOperations.TurnGunRightRadians = Utils.NormalRelativeAngle(absBearing - robot.GunHeadingRadians)
                                          + gunAngles[8 + (int) (e.Velocity*Math.Sin(e.HeadingRadians - absBearing))];
-            newOperations.BulletPower = FIRE_POWER;
+            if (robot.Energy >= 5)
+                newOperations.BulletPower = FIRE_POWER;
+            else
+                newOperations.BulletPower = 0;
 
             newOperations.TurnRadarRightRadians = Utils.NormalRelativeAngle(absBearing - robot.RadarHeadingRadians) * 2;
 
             return newOperations;
+        }
+
+        private static void SetFirePowerBasedOnEnergy(AdvancedRobot robot, ScannedRobotEvent e)
+        {
+            if (robot.Energy > 50)
+            {
+                FIRE_POWER = 2;
+            }
+            else if (robot.Energy <= 50 && robot.Energy >= 20 || e.Energy < 15)
+            {
+                FIRE_POWER = 1;
+            }
+            else
+            {
+                FIRE_POWER = 0.5;
+            }
         }
 
         /*

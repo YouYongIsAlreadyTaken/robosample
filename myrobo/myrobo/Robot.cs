@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using myrobo.Handlers;
 using Robocode;
 using Robocode.Util;
 
@@ -20,7 +21,7 @@ namespace myrobo
         private int tickcount = 0;
         private IHandleScanedRobot currentHandler;
 
-        private IList<IHandleScanedRobot> handlers = new List<IHandleScanedRobot>() { new Handlers.Ram(), new Handlers.SuperMercutioCSharp()};
+        private IList<IHandleScanedRobot> handlers = new List<IHandleScanedRobot>() { new Handlers.Ram(), new Handlers.SuperM()};
         //private IList<IHandleScanedRobot> handlers = new List<IHandleScanedRobot>() { new Handlers.Mercutio() };
         public override void Run()
         {
@@ -28,6 +29,15 @@ namespace myrobo
             IsAdjustGunForRobotTurn = true;
             IsAdjustRadarForGunTurn = true;
             SetTurnRadarRightRadians(double.MaxValue);
+
+            while (true)
+            {
+                if (RadarTurnRemainingRadians == 0)
+                {
+                    SetTurnRadarRightRadians(double.MaxValue);
+                }
+                Execute();
+            }
 
         }
 
@@ -76,7 +86,7 @@ namespace myrobo
             {
                 SetTurnRadarRightRadians(op.TurnRadarRightRadians.Value);
             }
-            if (op.BulletPower.HasValue)
+            if (op.BulletPower.HasValue && op.BulletPower.Value != 0)
             {
                 SetFire(op.BulletPower.Value);
             }
