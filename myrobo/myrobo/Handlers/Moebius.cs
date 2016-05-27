@@ -2,7 +2,7 @@ using System;
 using System.Text;
 using Robocode;
 using Robocode.Util;
-
+//Not ready to add it to handlers, the pattenMatcher not correct for now.
 namespace myrobo.Handlers
 {
     class Moebius : IHandleScanedRobot
