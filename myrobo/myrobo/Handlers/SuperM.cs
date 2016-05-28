@@ -120,17 +120,21 @@ namespace myrobo.Handlers
 
         private static void SetFirePowerBasedOnEnergy(AdvancedRobot robot, ScannedRobotEvent e)
         {
-            if (robot.Energy > 50)
+            if (robot.Energy > 70)
             {
                 FIRE_POWER = 2;
             }
-            else if (robot.Energy <= 50 && robot.Energy >= 20 || e.Energy < 15)
+            else if (robot.Energy <= 70 && robot.Energy > 50)
             {
                 FIRE_POWER = 1;
             }
-            else
+            else if (robot.Energy <= 50 && robot.Energy >= 30 || e.Energy < 15)
             {
                 FIRE_POWER = 0.5;
+            }
+            else
+            {
+                FIRE_POWER = 0.2;
             }
         }
 
@@ -310,14 +314,4 @@ namespace myrobo.Handlers
         }
 
     }
-    public static class PointFExtensions
-    {
-        public static float Distance(this PointF p1, PointF p2)
-        {
-            float a = p1.X - p2.X;
-            float b = p1.Y - p2.Y;
-            float distance = (float)Math.Sqrt(a * a + b * b);
-            return distance;
-        }
-    }  
 }

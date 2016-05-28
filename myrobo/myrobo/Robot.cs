@@ -21,7 +21,7 @@ namespace myrobo
         private int tickcount = 0;
         private IHandleScanedRobot currentHandler;
 
-        private IList<IHandleScanedRobot> handlers = new List<IHandleScanedRobot>() { new Handlers.Ram(), new Handlers.SuperM()};
+        private IList<IHandleScanedRobot> handlers = new List<IHandleScanedRobot>() { new Handlers.RamMinRisk(), new Handlers.SuperM()};
         //private IList<IHandleScanedRobot> handlers = new List<IHandleScanedRobot>() { new Handlers.Mercutio() };
         public override void Run()
         {
