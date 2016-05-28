@@ -13,6 +13,36 @@ namespace myrobo.Handlers
     {
         static double expectedHeading;
 
+        public Confidence Evaluate(AdvancedRobot robot, ScannedRobotEvent e, BattleEvents battleEvents)
+        {
+            Confidence confidence = Confidence.DonotBlameMeIfILoose;
+            if (e.Distance < 200)
+            {
+                if (robot.Energy > e.Energy)
+                {
+                    confidence = Confidence.DesignedForThis;
+                }
+                else
+                {
+                    confidence = Confidence.CanHandleIt;
+                }
+
+            }
+            else
+            {
+                if (robot.Energy > e.Energy)
+                {
+                    confidence = Confidence.TryMe;
+                }
+                else
+                {
+                    confidence = Confidence.DonotBlameMeIfILoose;
+                }
+            }
+
+            return confidence;
+        }
+
         public Operations HandleScanedRobot(AdvancedRobot robot, ScannedRobotEvent e, ScannedRobotEvent previousScaned,
             Operations operations, BattleEvents battleEvents)
         {
@@ -74,36 +104,6 @@ namespace myrobo.Handlers
             newOperations.TurnRadarRightRadians = (2 * Utils.NormalRelativeAngle(absoluteBearing - robot.RadarHeadingRadians));
 
             return newOperations;
-        }
-
-        public Confidence Evaluate(AdvancedRobot robot, ScannedRobotEvent e, BattleEvents battleEvents)
-        {
-            Confidence confidence = Confidence.DonotBlameMeIfILoose;
-            if (e.Distance < 200)
-            {
-                if (robot.Energy > e.Energy)
-                {
-                    confidence = Confidence.DesignedForThis;
-                }
-                else
-                {
-                    confidence = Confidence.CanHandleIt;
-                }
-
-            }
-            else
-            {
-                if (robot.Energy > e.Energy)
-                {
-                    confidence = Confidence.TryMe;
-                }
-                else
-                {
-                    confidence = Confidence.DonotBlameMeIfILoose;
-                }
-            }
-
-            return confidence;
         }
 
         public void OnBulletHit(BulletHitEvent evnt)

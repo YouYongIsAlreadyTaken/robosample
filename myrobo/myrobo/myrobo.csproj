@@ -51,8 +51,7 @@
     <Compile Include="PointFExtensions.cs" />
     <Compile Include="Handlers\Ram.cs" />
     <Compile Include="Handlers\RamMinRisk.cs" />
-    <Compile Include="Robots\RamMinRisk.cs" />
-    <Compile Include="Robots\SpinDodge.cs" />
+    <Compile Include="Robots\MaxRisk.cs" />
     <Compile Include="Handlers\SuperM.cs" />
     <Compile Include="Robot.cs" />
     <Compile Include="Interface\IHandleScanedRobot.cs" />

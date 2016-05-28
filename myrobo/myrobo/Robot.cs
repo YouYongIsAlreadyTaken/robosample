@@ -44,6 +44,12 @@ namespace myrobo
         // Robot event handler, when the robot sees another robot
         public override void OnScannedRobot(ScannedRobotEvent e)
         {
+            //let each handler to handle onScaned event to build up complete data for all tick
+            foreach (IHandleScanedRobot handleScanedRobot in handlers)
+            {
+                handleScanedRobot.HandleScanedRobot(this, e, lastScannedRobotEvent, operations, battleEvents);
+            }
+
             if (tickcount == 0)
             {
                 tickcount = minticks + (int) rnd.NextDouble()*ticksRange;
@@ -86,7 +92,7 @@ namespace myrobo
             {
                 SetTurnRadarRightRadians(op.TurnRadarRightRadians.Value);
             }
-            if (op.BulletPower.HasValue && op.BulletPower.Value != 0)
+            if (op.BulletPower.HasValue)
             {
                 SetFire(op.BulletPower.Value);
             }
