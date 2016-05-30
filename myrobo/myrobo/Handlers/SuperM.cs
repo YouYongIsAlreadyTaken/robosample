@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Linq;
 using Robocode;
 using Robocode.Util;
 
@@ -66,7 +67,7 @@ namespace myrobo.Handlers
         {
             var newOperations = operations.Clone();
 
-            SetFirePowerBasedOnEnergy(robot, e);
+            SetFirePowerBasedOnEnergy(robot, e,battleEvents);
 
             double absBearing = e.BearingRadians + robot.HeadingRadians;
 
@@ -115,11 +116,12 @@ namespace myrobo.Handlers
             return newOperations;
         }
 
-        private static void SetFirePowerBasedOnEnergy(AdvancedRobot robot, ScannedRobotEvent e)
+        private static void SetFirePowerBasedOnEnergy(AdvancedRobot robot, ScannedRobotEvent e,BattleEvents battleEvents)
         {
-            if (robot.Energy > 70)
+            
+            if (robot.Energy > 70 )
             {
-                FIRE_POWER = 2;
+                FIRE_POWER = 3;
             }
             else if (robot.Energy <= 70 && robot.Energy > 50)
             {
@@ -131,9 +133,12 @@ namespace myrobo.Handlers
             }
             else
             {
-                FIRE_POWER = 0.2;
+                FIRE_POWER = 0.1;
             }
+
+
         }
+
 
         /*
 	    * This helps us keep from being confused about the enemy's energy after hitting them with a bullet.

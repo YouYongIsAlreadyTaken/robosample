@@ -47,7 +47,7 @@
     <Compile Include="BattleEvents.cs" />
     <Compile Include="CalculatedParams.cs" />
     <Compile Include="Confidence.cs" />
-    <Compile Include="Handlers\Mercutio.cs" />
+    <Compile Include="Handlers\Moebius.cs" />
     <Compile Include="PointFExtensions.cs" />
     <Compile Include="Handlers\Ram.cs" />
     <Compile Include="Handlers\RamMinRisk.cs" />

@@ -33,6 +33,12 @@ namespace myrobo.Handlers
             Confidence confidence = Confidence.DonotBlameMeIfILoose;
             return confidence;
         }
+
+        public void OnBulletHit(BulletHitEvent evnt)
+        {
+            throw new NotImplementedException();
+        }
+
         public Operations HandleScanedRobot(AdvancedRobot robot, ScannedRobotEvent e, ScannedRobotEvent previousScaned,
             Operations operations, BattleEvents battleEvents)
         {

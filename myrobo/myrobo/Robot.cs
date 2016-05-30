@@ -19,9 +19,11 @@ namespace myrobo
         private const int minticks = 5;
         private const int ticksRange = 10;
         private int tickcount = 0;
+        static int LONG_TICK_WINDOW = 500;
+        static int SHORT_TICK_WINDOW = 10;
         private IHandleScanedRobot currentHandler;
 
-        private IList<IHandleScanedRobot> handlers = new List<IHandleScanedRobot>() { new Handlers.RamMinRisk(), new Handlers.SuperM()};
+        private IList<IHandleScanedRobot> handlers = new List<IHandleScanedRobot>() { new Handlers.RamMinRisk()};
         //private IList<IHandleScanedRobot> handlers = new List<IHandleScanedRobot>() { new Handlers.Mercutio() };
         public override void Run()
         {
