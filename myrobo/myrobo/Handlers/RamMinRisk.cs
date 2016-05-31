@@ -87,10 +87,10 @@ namespace myrobo.Handlers
                 if (value > maxValue)
                 {
                     maxValue = value;
-                    double turnAngle = angle - robot.HeadingRadians;
-                    newOperations.Ahead = (Math.Cos(turnAngle) > 0 ? 100 : -100);
+                    double turnAngle = angle - robot.HeadingRadians;           
                     if (headingEnemy)
                     {
+                        newOperations.Ahead = (Math.Cos(turnAngle) > 0 ? 100 : -100);
                         newOperations.TurnRightRadians = (Math.Tan(turnAngle));
                     }
                     else
@@ -99,6 +99,7 @@ namespace myrobo.Handlers
                         double turn = absoluteBearingMedkit + Math.PI / 2;
                         turn -= Math.Max(0.5, (1 / lastMedicalKitEvent.Distance) * 100) * newOperations.Direction;
                         newOperations.TurnRightRadians = Utils.NormalRelativeAngle(turn - robot.HeadingRadians);
+                        newOperations.Ahead = (Math.Cos(turn) > 0 ? 100 : -100);
                     }
                     
                 }
