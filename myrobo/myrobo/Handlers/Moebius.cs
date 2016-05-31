@@ -105,8 +105,16 @@ namespace myrobo.Handlers
 	
 		// I'd love to drop a clearAllEvents() here for melee radar locking help, but no space.
 	}
-    
 
+        void IHandleScanedRobot.OnScannedMedicalKit(ScannedMedicalKitEvent evnt)
+        {
+            //throw new NotImplementedException();
+        }
+
+        public void OnFetchMedicalKit(FetchedMedicalKitEvent evnt)
+        {
+            //throw new NotImplementedException();
+        }
 
     }
 }

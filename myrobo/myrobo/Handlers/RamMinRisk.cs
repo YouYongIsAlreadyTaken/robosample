@@ -12,6 +12,8 @@ namespace myrobo.Handlers
     public class RamMinRisk : IHandleScanedRobot
     {
         static double expectedHeading;
+        private bool headingEnemy = true;
+        private ScannedMedicalKitEvent lastMedicalKitEvent;
 
         public Confidence Evaluate(AdvancedRobot robot, ScannedRobotEvent e, BattleEvents battleEvents)
         {
@@ -86,8 +88,19 @@ namespace myrobo.Handlers
                 {
                     maxValue = value;
                     double turnAngle = angle - robot.HeadingRadians;
-                    newOperations.Ahead = (Math.Cos(turnAngle) > 0 ? 100 : -100);
-                    newOperations.TurnRightRadians = (Math.Tan(turnAngle));
+                    if (headingEnemy)
+                    {
+                        newOperations.Ahead = (Math.Cos(turnAngle) > 0 ? 100 : -100);
+                        newOperations.TurnRightRadians = (Math.Tan(turnAngle));
+                    }
+                    else
+                    {
+                        var absoluteBearingMedkit = e.BearingRadians + robot.HeadingRadians;
+                        double turn = absoluteBearingMedkit + Math.PI / 2;
+                        turn -= Math.Max(0.5, (1 / e.Distance) * 100) * newOperations.Direction;
+                        newOperations.TurnRightRadians = Utils.NormalRelativeAngle(turn - robot.HeadingRadians);
+                    }
+                    
                 }
             } while ((angle += 0.01) < Math.PI * 2);
 
@@ -114,6 +127,16 @@ namespace myrobo.Handlers
         static PointF projectMotion(PointF location, double heading, double distance)
         {
             return new PointF((float)(location.X + distance * Math.Sin(heading)), (float)(location.Y + distance * Math.Cos(heading)));
+        }
+
+        void IHandleScanedRobot.OnScannedMedicalKit(ScannedMedicalKitEvent evnt)
+        {
+            headingEnemy = false;
+            lastMedicalKitEvent = evnt;
+        }
+        public void OnFetchMedicalKit(FetchedMedicalKitEvent evnt)
+        {
+            headingEnemy = true;
         }
     }
 }

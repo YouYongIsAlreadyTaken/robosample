@@ -43,6 +43,18 @@ namespace myrobo
 
         }
 
+        public override void OnScannedMedicalKit(ScannedMedicalKitEvent evnt)
+        {
+            currentHandler.OnScannedMedicalKit(evnt);
+            base.OnScannedMedicalKit(evnt);
+        }
+
+        public override void OnFetchMedicalKit(FetchedMedicalKitEvent evnt)
+        {
+            currentHandler.OnFetchMedicalKit(evnt);
+            base.OnFetchMedicalKit(evnt);
+        }
+
         // Robot event handler, when the robot sees another robot
         public override void OnScannedRobot(ScannedRobotEvent e)
         {

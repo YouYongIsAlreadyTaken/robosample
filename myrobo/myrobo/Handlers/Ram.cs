@@ -120,7 +120,14 @@ namespace myrobo.Handlers
             //Find the bearing of our predicted coordinates from us.
             return Utils.NormalAbsoluteAngle(Math.Atan2(predictedX - robot.X, predictedY - robot.Y));
         }
-
+        void IHandleScanedRobot.OnScannedMedicalKit(ScannedMedicalKitEvent evnt)
+        {
+            //throw new NotImplementedException();
+        }
+        public void OnFetchMedicalKit(FetchedMedicalKitEvent evnt)
+        {
+            //throw new NotImplementedException();
+        }
 
     }
 }

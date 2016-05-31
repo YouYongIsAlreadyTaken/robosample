@@ -307,5 +307,31 @@ namespace myrobo.Handlers
             public double startTime;
         }
 
+
+        Operations IHandleScanedRobot.HandleScanedRobot(AdvancedRobot robot, ScannedRobotEvent e, ScannedRobotEvent previousScaned, Operations operations, BattleEvents battleEvents)
+        {
+            throw new NotImplementedException();
+        }
+
+        Confidence IHandleScanedRobot.Evaluate(AdvancedRobot robot, ScannedRobotEvent e, BattleEvents battleEvents)
+        {
+            throw new NotImplementedException();
+        }
+
+        void IHandleScanedRobot.OnBulletHit(BulletHitEvent evnt)
+        {
+            throw new NotImplementedException();
+        }
+
+        void IHandleScanedRobot.OnScannedMedicalKit(ScannedMedicalKitEvent evnt)
+        {
+            //throw new NotImplementedException();
+        }
+
+
+        public void OnFetchMedicalKit(FetchedMedicalKitEvent evnt)
+        {
+           // throw new NotImplementedException();
+        }
     }
 }
