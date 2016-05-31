@@ -88,16 +88,16 @@ namespace myrobo.Handlers
                 {
                     maxValue = value;
                     double turnAngle = angle - robot.HeadingRadians;
+                    newOperations.Ahead = (Math.Cos(turnAngle) > 0 ? 100 : -100);
                     if (headingEnemy)
                     {
-                        newOperations.Ahead = (Math.Cos(turnAngle) > 0 ? 100 : -100);
                         newOperations.TurnRightRadians = (Math.Tan(turnAngle));
                     }
                     else
                     {
-                        var absoluteBearingMedkit = e.BearingRadians + robot.HeadingRadians;
+                        var absoluteBearingMedkit = lastMedicalKitEvent.BearingRadians + robot.HeadingRadians;
                         double turn = absoluteBearingMedkit + Math.PI / 2;
-                        turn -= Math.Max(0.5, (1 / e.Distance) * 100) * newOperations.Direction;
+                        turn -= Math.Max(0.5, (1 / lastMedicalKitEvent.Distance) * 100) * newOperations.Direction;
                         newOperations.TurnRightRadians = Utils.NormalRelativeAngle(turn - robot.HeadingRadians);
                     }
                     
